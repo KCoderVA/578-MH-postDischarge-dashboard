@@ -101,7 +101,7 @@ jobs:
           fi
 
       - name: Create changelog update PR
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "docs(changelog): auto-update for ${{ github.event.release.tag_name }}"
           title: "docs: Update CHANGELOG.md for ${{ github.event.release.tag_name }}"
