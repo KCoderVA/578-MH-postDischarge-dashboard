@@ -1,0 +1,115 @@
+{
+  // ==========================================================================
+  // MH PostDischarge Dashboard - VS Code Tasks
+  // Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+  // Licensed under the Apache License, Version 2.0
+  // ==========================================================================
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open PowerBI Workspace (Gov Cloud)",
+      "type": "shell",
+      "command": "start",
+      "args": [
+        "https://app.powerbigov.us/groups/f9a21156-7cbd-49e0-8cec-3b7b6e47b9e9/list?tenant=e95f1b23-abaf-45ee-821d-b7ab251ab3bf"
+      ],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "close": true
+      }
+    },
+    {
+      "label": "Open GitHub Repository",
+      "type": "shell",
+      "command": "start",
+      "args": [
+        "https://github.com/KCoderVA/578-MH-postDischarge-dashboard"
+      ],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "close": true
+      }
+    },
+    {
+      "label": "Validate License Headers",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-File",
+        "${workspaceFolder}/scripts/powershell/validateLicenseHeaders.ps1"
+      ],
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Append Changelog Entry",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-File",
+        "${workspaceFolder}/scripts/powershell/appendChangelogEntry.ps1"
+      ],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Export Project Snapshot",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-File",
+        "${workspaceFolder}/scripts/powershell/exportProjectSnapshot.ps1"
+      ],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Git: Quick Status",
+      "type": "shell",
+      "command": "git",
+      "args": ["status", "--short", "--branch"],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Git: View Recent Log",
+      "type": "shell",
+      "command": "git",
+      "args": [
+        "log",
+        "--oneline",
+        "--graph",
+        "--decorate",
+        "-20"
+      ],
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}

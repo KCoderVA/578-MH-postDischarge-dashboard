@@ -1,0 +1,83 @@
+{
+  // ==========================================================================
+  // MH PostDischarge Dashboard - Workspace Settings
+  // Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+  // Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+  // Licensed under the Apache License, Version 2.0
+  // ==========================================================================
+  // These settings apply at the WORKSPACE level and override user-level
+  // settings only within this project.
+  // ==========================================================================
+
+  // File associations for this project
+  "files.associations": {
+    "*.sql": "sql",
+    "*.prompt": "markdown",
+    "*.copilotmd": "markdown"
+  },
+
+  // Project-specific file exclusions from explorer view
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/.venv": true,
+    "**/.git": false
+  },
+
+  // Search exclusions (reduce noise in search results)
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.venv": true,
+    "**/archive/snapshots": true,
+    "**/tests/output": true
+  },
+
+  // SQL (MSSQL) configuration for this project
+  "mssql.connections": [
+    {
+      "server": "VhaCdwDwhSql33.vha.med.va.gov",
+      "database": "D03_VISN12Collab",
+      "authenticationType": "Integrated",
+      "profileName": "578-MH-PostDischarge",
+      "encrypt": "Mandatory",
+      "trustServerCertificate": true,
+      "connectTimeout": 30,
+      "commandTimeout": 30,
+      "applicationName": "vscode-mssql",
+      "applicationIntent": "ReadWrite"
+    }
+  ],
+
+  // Copilot instructions location
+  "chat.instructionsFilesLocations": {
+    ".github/copilot-instructions.md": true
+  },
+
+  // Editor settings specific to this project
+  "editor.formatOnSave": true,
+  "editor.rulers": [100, 120],
+
+  // Markdown specific settings
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // SQL specific settings
+  "[sql]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+
+  // PowerShell specific settings
+  "[powershell]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+
+  // Python specific settings
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  }
+}

@@ -1,0 +1,25 @@
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# CODEOWNERS - Defines code ownership for pull request reviews
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+* @KCoderVA
+
+# SQL source files
+/src/sql/ @KCoderVA
+
+# PowerBI artifacts
+/src/powerbi/ @KCoderVA
+
+# Documentation
+/docs/ @KCoderVA
+
+# GitHub configuration & workflows
+/.github/ @KCoderVA
+
+# VS Code workspace configuration
+/.vscode/ @KCoderVA

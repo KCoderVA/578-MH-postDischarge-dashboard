@@ -1,0 +1,23 @@
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Python dependencies for MH PostDischarge Dashboard
+# Install: pip install -r requirements.txt
+#
+# This file is a placeholder. Add dependencies as needed during development.
+# The .venv/ directory is excluded from Git tracking via .gitignore.
+
+# Data analysis (uncomment when needed)
+# pandas>=2.0.0
+# numpy>=1.24.0
+# openpyxl>=3.1.0
+
+# Database connectivity (uncomment when needed)
+# pyodbc>=5.0.0
+# sqlalchemy>=2.0.0
+
+# Utility (uncomment when needed)
+# python-dotenv>=1.0.0
+# requests>=2.31.0

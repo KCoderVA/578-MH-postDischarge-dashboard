@@ -1,0 +1,196 @@
+#!/bin/bash
+# ============================================================================
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+#
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+# ============================================================================
+# Hook:        pre-commit
+# Author:      Kyle J. Coder (Kyle.Coder@va.gov)
+# Created:     2026-03-04
+# Version:     v0.1.0
+# Description: Comprehensive Git pre-commit hook with easy enable/disable
+#              toggles for each check. Set any toggle to "false" to disable
+#              that specific check.
+#
+# INSTALLATION:
+#   Copy this file to .git/hooks/pre-commit and make executable:
+#     cp .github/hooks/pre-commit .git/hooks/pre-commit
+#     chmod +x .git/hooks/pre-commit
+#
+# Or create a symlink:
+#     ln -s ../../.github/hooks/pre-commit .git/hooks/pre-commit
+# ============================================================================
+
+# =============================================
+# ENABLE/DISABLE TOGGLES
+# Set any of these to "false" to skip that check
+# =============================================
+ENABLE_SECRET_SCAN="true"
+ENABLE_LICENSE_HEADER_CHECK="true"
+ENABLE_PHI_PII_SCAN="true"
+ENABLE_LARGE_FILE_CHECK="true"
+# =============================================
+
+# Track overall pass/fail
+EXIT_CODE=0
+
+echo "Running pre-commit checks..."
+echo "=============================="
+
+# ------------------------------------------
+# CHECK 1: Secret/Credential Scanning
+# ------------------------------------------
+if [ "$ENABLE_SECRET_SCAN" = "true" ]; then
+    echo "[1/4] Scanning for secrets and credentials..."
+
+    # Get list of staged files
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+    SECRET_FOUND=0
+    for file in $STAGED_FILES; do
+        if [ -f "$file" ]; then
+            # Check for common secret patterns (case-insensitive)
+            if grep -iEn "(password\s*=\s*['\"][^'\"]+|api[_-]?key\s*=\s*['\"][^'\"]+|secret\s*=\s*['\"][^'\"]+|BEGIN (RSA |DSA |EC )?PRIVATE KEY)" "$file" 2>/dev/null | grep -v "\.md:" | grep -v "\.gitignore:" | grep -v "copilot" >/dev/null 2>&1; then
+                echo "  WARNING: Potential secret found in: $file"
+                SECRET_FOUND=1
+            fi
+        fi
+    done
+
+    if [ $SECRET_FOUND -eq 1 ]; then
+        echo "  FAILED: Potential secrets detected. Review files above."
+        echo "  To bypass: git commit --no-verify"
+        EXIT_CODE=1
+    else
+        echo "  PASSED: No secrets detected"
+    fi
+else
+    echo "[1/4] Secret scan: DISABLED"
+fi
+
+# ------------------------------------------
+# CHECK 2: License Header Verification
+# ------------------------------------------
+if [ "$ENABLE_LICENSE_HEADER_CHECK" = "true" ]; then
+    echo "[2/4] Checking license headers..."
+
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+    MISSING_HEADER=0
+
+    for file in $STAGED_FILES; do
+        if [ -f "$file" ]; then
+            # Only check source files (not binary, not config)
+            case "$file" in
+                *.sql|*.ps1|*.py|*.js|*.ts)
+                    if ! head -10 "$file" | grep -q "Apache License" 2>/dev/null; then
+                        echo "  WARNING: Missing license header: $file"
+                        MISSING_HEADER=1
+                    fi
+                    ;;
+                *.md)
+                    # Skip README files in template directories and the LICENSE file
+                    case "$file" in
+                        LICENSE|*.pbit|*.pbix) ;;
+                        *)
+                            if ! head -5 "$file" | grep -q "Apache License\|Copyright.*Veterans Affairs" 2>/dev/null; then
+                                echo "  INFO: Consider adding license header: $file"
+                            fi
+                            ;;
+                    esac
+                    ;;
+            esac
+        fi
+    done
+
+    if [ $MISSING_HEADER -eq 1 ]; then
+        echo "  WARNING: Some files missing license headers (non-blocking)"
+    else
+        echo "  PASSED: License headers OK"
+    fi
+else
+    echo "[2/4] License header check: DISABLED"
+fi
+
+# ------------------------------------------
+# CHECK 3: PHI/PII Content Scan
+# ------------------------------------------
+if [ "$ENABLE_PHI_PII_SCAN" = "true" ]; then
+    echo "[3/4] Scanning for potential PHI/PII..."
+
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+    PHI_FOUND=0
+
+    for file in $STAGED_FILES; do
+        if [ -f "$file" ]; then
+            # Skip binary files and documentation about PHI policy
+            case "$file" in
+                *.pbix|*.pbit|*.xlsx|*.docx|*.pdf|*.png|*.jpg|*.gif|*.ico|*.zip|*.7z|*.exe|SECURITY.md|CONTRIBUTING.md|*.prompt) continue ;;
+            esac
+
+            # Check for SSN patterns (XXX-XX-XXXX)
+            if grep -En "[0-9]{3}-[0-9]{2}-[0-9]{4}" "$file" 2>/dev/null | grep -v "\.md:.*example\|\.md:.*pattern\|\.md:.*format" >/dev/null 2>&1; then
+                echo "  ALERT: Possible SSN pattern found in: $file"
+                PHI_FOUND=1
+            fi
+
+            # Check for common PHI field names with actual values
+            if grep -iEn "(patientName\s*=\s*['\"][A-Z]|socialSecurity\s*=\s*['\"]|dateOfBirth\s*=\s*['\"][0-9])" "$file" 2>/dev/null | grep -v "template\|example\|snippet\|comment" >/dev/null 2>&1; then
+                echo "  ALERT: Possible PHI field with value in: $file"
+                PHI_FOUND=1
+            fi
+        fi
+    done
+
+    if [ $PHI_FOUND -eq 1 ]; then
+        echo "  FAILED: Potential PHI/PII detected. Review files above."
+        echo "  CRITICAL: Do NOT commit PHI/PII to this repository."
+        EXIT_CODE=1
+    else
+        echo "  PASSED: No PHI/PII patterns detected"
+    fi
+else
+    echo "[3/4] PHI/PII scan: DISABLED"
+fi
+
+# ------------------------------------------
+# CHECK 4: Large File Check
+# ------------------------------------------
+if [ "$ENABLE_LARGE_FILE_CHECK" = "true" ]; then
+    echo "[4/4] Checking for oversized files..."
+
+    MAX_FILE_SIZE=52428800  # 50 MB in bytes
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+    LARGE_FOUND=0
+
+    for file in $STAGED_FILES; do
+        if [ -f "$file" ]; then
+            FILE_SIZE=$(wc -c < "$file" 2>/dev/null || echo "0")
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ]; then
+                SIZE_MB=$((FILE_SIZE / 1048576))
+                echo "  WARNING: Large file (${SIZE_MB}MB): $file"
+                echo "  Consider using Git LFS for this file."
+                LARGE_FOUND=1
+            fi
+        fi
+    done
+
+    if [ $LARGE_FOUND -eq 1 ]; then
+        echo "  WARNING: Large files detected (non-blocking)"
+    else
+        echo "  PASSED: No oversized files"
+    fi
+else
+    echo "[4/4] Large file check: DISABLED"
+fi
+
+echo "=============================="
+
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "PRE-COMMIT: FAILED - Fix issues above or use 'git commit --no-verify' to bypass"
+else
+    echo "PRE-COMMIT: ALL CHECKS PASSED"
+fi
+
+exit $EXIT_CODE

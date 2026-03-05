@@ -1,0 +1,33 @@
+{
+  "_comment": "SQL Connection Profiles for MH PostDischarge Dashboard (non-sensitive metadata only)",
+  "_license": "Apache License 2.0 - Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs",
+  "_note": "No passwords or tokens are stored in this file. All connections use Windows Integrated Security or Entra authentication.",
+  "profiles": [
+    {
+      "name": "578-MH-PostDischarge-Primary",
+      "description": "Primary connection for MH PostDischarge Dashboard development",
+      "server": "VhaCdwDwhSql33.vha.med.va.gov",
+      "database": "D03_VISN12Collab",
+      "authenticationType": "Integrated",
+      "encrypt": true,
+      "trustServerCertificate": true,
+      "connectTimeout": 30,
+      "commandTimeout": 30,
+      "applicationName": "vscode-mssql",
+      "applicationIntent": "ReadWrite"
+    },
+    {
+      "name": "CDW-SQL33-General",
+      "description": "General CDW access on SQL33 for ad-hoc queries",
+      "server": "VhaCdwDwhSql33.vha.med.va.gov",
+      "database": "",
+      "authenticationType": "Integrated",
+      "encrypt": true,
+      "trustServerCertificate": true,
+      "connectTimeout": 30,
+      "commandTimeout": 30,
+      "applicationName": "vscode-mssql",
+      "applicationIntent": "ReadWrite"
+    }
+  ]
+}

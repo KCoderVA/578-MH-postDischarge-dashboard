@@ -1,0 +1,173 @@
+{
+  "name": "VA Branded Theme - MH PostDischarge Dashboard",
+  "description": "PowerBI theme aligned with VA Design System (design.va.gov) for the MH PostDischarge Dashboard project at Edward Hines Jr. VA Hospital (Station 578).",
+  "version": "0.1.0",
+  "author": "Kyle J. Coder (Kyle.Coder@va.gov)",
+  "license": "Apache-2.0",
+  "dataColors": [
+    "#003F72",
+    "#0083BE",
+    "#C4262E",
+    "#772432",
+    "#598527",
+    "#F3CF45",
+    "#F7955B",
+    "#839097",
+    "#DCDDDE",
+    "#CCCC99",
+    "#BEC292",
+    "#205493",
+    "#02BFE7",
+    "#2E8540",
+    "#FDB81E"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#212121",
+  "tableAccent": "#003F72",
+  "textClasses": {
+    "callout": {
+      "fontSize": 36,
+      "fontFace": "Source Sans Pro, Segoe UI, Arial, sans-serif",
+      "color": "#003F72"
+    },
+    "title": {
+      "fontSize": 18,
+      "fontFace": "Source Sans Pro, Segoe UI, Arial, sans-serif",
+      "color": "#212121"
+    },
+    "header": {
+      "fontSize": 14,
+      "fontFace": "Source Sans Pro, Segoe UI, Arial, sans-serif",
+      "color": "#212121"
+    },
+    "label": {
+      "fontSize": 11,
+      "fontFace": "Source Sans Pro, Segoe UI, Arial, sans-serif",
+      "color": "#565C65"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "general": [
+          {
+            "responsive": true
+          }
+        ],
+        "border": [
+          {
+            "color": {
+              "solid": {
+                "color": "#DCDDDE"
+              }
+            },
+            "radius": 4
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F1F1F1"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#003F72"
+              }
+            },
+            "fontSize": 32,
+            "fontFamily": "Source Sans Pro, Segoe UI, Arial, sans-serif"
+          }
+        ],
+        "categoryLabels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#565C65"
+              }
+            },
+            "fontSize": 12,
+            "fontFamily": "Source Sans Pro, Segoe UI, Arial, sans-serif"
+          }
+        ]
+      }
+    },
+    "slicer": {
+      "*": {
+        "general": [
+          {
+            "outlineColor": {
+              "solid": {
+                "color": "#003F72"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "table": {
+      "*": {
+        "columnHeaders": [
+          {
+            "fontColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": "#003F72"
+              }
+            },
+            "fontSize": 11,
+            "fontFamily": "Source Sans Pro, Segoe UI, Arial, sans-serif"
+          }
+        ],
+        "values": [
+          {
+            "fontColor": {
+              "solid": {
+                "color": "#212121"
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "fontSize": 10,
+            "fontFamily": "Source Sans Pro, Segoe UI, Arial, sans-serif"
+          }
+        ],
+        "total": [
+          {
+            "fontColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": "#205493"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

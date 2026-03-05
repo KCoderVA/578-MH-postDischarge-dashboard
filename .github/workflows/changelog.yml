@@ -1,0 +1,113 @@
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+
+name: Generate Changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  changelog:
+    name: Update Changelog on Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog from commits
+        id: changelog
+        run: |
+          # Get the tag name from the release
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          RELEASE_DATE=$(date +%Y-%m-%d)
+
+          echo "Generating changelog for release: $TAG_NAME ($RELEASE_DATE)"
+
+          # Get the previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found, using all commits"
+            COMMIT_RANGE="HEAD"
+          else
+            echo "Previous tag: $PREV_TAG"
+            COMMIT_RANGE="${PREV_TAG}..HEAD"
+          fi
+
+          # Categorize commits by type
+          echo "## [$TAG_NAME] - $RELEASE_DATE" > /tmp/new_changelog_entry.md
+          echo "" >> /tmp/new_changelog_entry.md
+
+          # Features
+          FEATS=$(git log $COMMIT_RANGE --pretty=format:"- %s" --grep="^feat" 2>/dev/null || echo "")
+          if [ -n "$FEATS" ]; then
+            echo "### Added" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+            echo "$FEATS" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+          fi
+
+          # Fixes
+          FIXES=$(git log $COMMIT_RANGE --pretty=format:"- %s" --grep="^fix" 2>/dev/null || echo "")
+          if [ -n "$FIXES" ]; then
+            echo "### Fixed" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+            echo "$FIXES" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+          fi
+
+          # Docs
+          DOCS=$(git log $COMMIT_RANGE --pretty=format:"- %s" --grep="^docs" 2>/dev/null || echo "")
+          if [ -n "$DOCS" ]; then
+            echo "### Documentation" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+            echo "$DOCS" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+          fi
+
+          # Other commits
+          OTHERS=$(git log $COMMIT_RANGE --pretty=format:"- %s" --grep="^chore\|^refactor\|^style\|^test" 2>/dev/null || echo "")
+          if [ -n "$OTHERS" ]; then
+            echo "### Other Changes" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+            echo "$OTHERS" >> /tmp/new_changelog_entry.md
+            echo "" >> /tmp/new_changelog_entry.md
+          fi
+
+          echo "---" >> /tmp/new_changelog_entry.md
+          echo "" >> /tmp/new_changelog_entry.md
+
+          cat /tmp/new_changelog_entry.md
+
+      - name: Prepend to CHANGELOG.md
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            # Insert new entry after the "## [Unreleased]" section header
+            # This preserves the file header and Unreleased section
+            cp CHANGELOG.md /tmp/old_changelog.md
+            cat /tmp/new_changelog_entry.md >> /tmp/changelog_insert.md
+            echo "Changelog entry generated. Manual review recommended before merging."
+          else
+            echo "CHANGELOG.md not found"
+          fi
+
+      - name: Create changelog update PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "docs(changelog): auto-update for ${{ github.event.release.tag_name }}"
+          title: "docs: Update CHANGELOG.md for ${{ github.event.release.tag_name }}"
+          body: |
+            Automated changelog update for release **${{ github.event.release.tag_name }}**.
+
+            Please review the generated changelog entries and edit as needed before merging.
+          branch: changelog/update-${{ github.event.release.tag_name }}
+          labels: documentation, automated

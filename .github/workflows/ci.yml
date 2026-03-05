@@ -1,0 +1,105 @@
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+
+name: CI - Validate Project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-markdown:
+    name: Validate Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check markdown files exist
+        run: |
+          echo "Checking required documentation files..."
+          files=("README.md" "CHANGELOG.md" "CONTRIBUTING.md" "SECURITY.md" "LICENSE")
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Required file '$file' is missing!"
+              exit 1
+            else
+              echo "OK: $file exists"
+            fi
+          done
+
+  check-license-headers:
+    name: Check License Headers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify license headers on SQL files
+        run: |
+          echo "Checking Apache 2.0 license headers on .sql files..."
+          exit_code=0
+          for file in $(find src/ -name "*.sql" -not -name "_template*" 2>/dev/null); do
+            if ! head -5 "$file" | grep -q "Apache License"; then
+              echo "WARNING: Missing license header in $file"
+              exit_code=1
+            fi
+          done
+          if [ $exit_code -eq 0 ]; then
+            echo "All SQL files have license headers (or no SQL files found yet)"
+          fi
+
+      - name: Verify license headers on PowerShell files
+        run: |
+          echo "Checking Apache 2.0 license headers on .ps1 files..."
+          for file in $(find scripts/ -name "*.ps1" 2>/dev/null); do
+            if ! head -5 "$file" | grep -q "Apache License"; then
+              echo "WARNING: Missing license header in $file"
+            fi
+          done
+          echo "PowerShell license header check complete"
+
+  secret-scan:
+    name: Check for Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scan for potential secrets
+        run: |
+          echo "Scanning for potential secrets and credentials..."
+          exit_code=0
+
+          # Check for common secret patterns
+          patterns=(
+            "password\s*="
+            "api[_-]?key\s*="
+            "secret\s*="
+            "token\s*="
+            "BEGIN (RSA |DSA |EC )?PRIVATE KEY"
+            "BEGIN CERTIFICATE"
+          )
+
+          for pattern in "${patterns[@]}"; do
+            matches=$(grep -rin "$pattern" --include="*.sql" --include="*.ps1" --include="*.py" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.js" . 2>/dev/null | grep -v "node_modules" | grep -v ".git/" | grep -v "SECURITY.md" | grep -v "CONTRIBUTING.md" | grep -v ".gitignore" | grep -v "copilot-instructions.md" | grep -v "copilot-snippets.md" | grep -v "ai-prompts.md" || true)
+            if [ -n "$matches" ]; then
+              echo "WARNING: Potential secret pattern '$pattern' found:"
+              echo "$matches"
+              exit_code=1
+            fi
+          done
+
+          if [ $exit_code -eq 0 ]; then
+            echo "No potential secrets detected"
+          else
+            echo ""
+            echo "Review the above warnings. If these are false positives, they can be ignored."
+          fi

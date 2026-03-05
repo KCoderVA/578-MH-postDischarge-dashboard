@@ -1,0 +1,180 @@
+# =============================================================================
+# Copyright 2026 Kyle J. Coder, U.S. Department of Veterans Affairs
+# Edward Hines Jr. VA Hospital - Advanced Analytics & Informatics Team
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+# =============================================================================
+# .gitignore for MH PostDischarge Dashboard
+# Project: 578-MH-postDischarge-dashboard
+# Version: v0.1.0
+#
+# STRATEGY: Most entries are COMMENTED OUT by default per project owner
+# preference. Uncomment sections as needed during later development stages.
+# Active (uncommented) entries are limited to items that should ALWAYS be
+# ignored regardless of development stage.
+# =============================================================================
+
+
+# ===========================
+# ALWAYS ACTIVE - Core Safety
+# ===========================
+
+# Secrets & credentials (NEVER commit these)
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.pfx
+*.p12
+**/credentials.json
+**/secrets.json
+**/appsettings.*.json
+!**/appsettings.json
+
+# Windows system files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Office temp/lock files
+~$*
+*.tmp
+
+
+# ==========================
+# VS CODE
+# ==========================
+# .vscode/*                   # Uncomment to ignore all VS Code workspace config
+# !.vscode/settings.json      # Keep workspace settings
+# !.vscode/tasks.json          # Keep task definitions
+# !.vscode/launch.json         # Keep debug configs
+# !.vscode/extensions.json     # Keep extension recommendations
+# .vscode/*.code-workspace     # Workspace files (uncomment if needed)
+# .history/                    # Local history extension
+
+
+# ==========================
+# PYTHON
+# ==========================
+
+# Python virtual environment (active - excluded from Git per Q5 answer)
+.venv/
+__pycache__/
+*.pyc
+
+# *.pyo
+# *.pyd
+# *.egg-info/
+# dist/
+# build/
+# *.egg
+# .Python
+# pip-log.txt
+# pip-delete-this-directory.txt
+# .pytest_cache/
+# .mypy_cache/
+# .coverage
+# htmlcov/
+
+
+# ==========================
+# NODE.JS
+# ==========================
+node_modules/
+
+# package-lock.json            # Uncomment if not using npm for deployment
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+# .npm
+# .eslintcache
+
+
+# ==========================
+# POWERBI
+# ==========================
+# NOTE: .pbix files are tracked via Git LFS (see .gitattributes)
+# *.pbix                       # Uncomment to exclude PowerBI files from Git
+# *.pbit                       # Uncomment to exclude PowerBI templates
+# .pbi/                        # PowerBI local cache
+
+
+# ==========================
+# .NET / VISUAL STUDIO
+# ==========================
+# bin/
+# obj/
+# *.suo
+# *.user
+# *.userosscache
+# *.sln.docstates
+# .vs/
+# *.nupkg
+# packages/
+
+
+# ==========================
+# POWER PLATFORM
+# ==========================
+# *.msapp                      # Canvas app packages (uncomment if using unpacked source only)
+# .powerapps/
+# .powerautomate/
+
+
+# ==========================
+# OFFICE DOCUMENTS
+# ==========================
+# NOTE: Office temp/lock files (~$*) are always ignored above.
+# *.docx                       # Uncomment to exclude Word documents
+# *.xlsx                       # Uncomment to exclude Excel files
+# *.pptx                       # Uncomment to exclude PowerPoint files
+
+
+# ==========================
+# BUILD & OUTPUT
+# ==========================
+# dist/
+# build/
+# out/
+# target/
+# *.exe
+# *.dll
+# *.so
+# *.dylib
+
+
+# ==========================
+# LOGS
+# ==========================
+# *.log                        # Uncomment to exclude log files
+# logs/                        # Uncomment to exclude entire logs directory
+# !logs/devLog.md              # But always keep the developer log
+
+
+# ==========================
+# ARCHIVES & LARGE FILES
+# ==========================
+# archive/snapshots/           # Uncomment to exclude large archive snapshots
+# *.zip
+# *.7z
+# *.tar.gz
+# *.rar
+
+
+# ==========================
+# MISCELLANEOUS
+# ==========================
+# .DS_Store                    # macOS (not applicable on Windows but good practice)
+# *.swp                        # Vim swap files
+# *.swo
+# *~                           # Backup files
+# .cache/
+# .idea/                       # JetBrains IDEs

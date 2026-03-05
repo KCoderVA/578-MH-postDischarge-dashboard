@@ -1,0 +1,29 @@
+{
+  "name": "578-mh-postdischarge-dashboard",
+  "version": "0.1.0",
+  "description": "MH PostDischarge Dashboard - PowerBI clinical decision support tool for Edward Hines Jr. VA Hospital",
+  "author": "Kyle J. Coder <Kyle.Coder@va.gov>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KCoderVA/578-MH-postDischarge-dashboard.git"
+  },
+  "keywords": [
+    "va",
+    "veterans-affairs",
+    "powerbi",
+    "healthcare",
+    "mental-health",
+    "dashboard",
+    "clinical-decision-support"
+  ],
+  "private": true,
+  "scripts": {
+    "lint:md": "prettier --check \"**/*.md\"",
+    "format:md": "prettier --write \"**/*.md\"",
+    "lint:json": "prettier --check \"**/*.json\"",
+    "format:json": "prettier --write \"**/*.json\"",
+    "validate:licenses": "pwsh -File scripts/powershell/validateLicenseHeaders.ps1"
+  },
+  "devDependencies": {}
+}
